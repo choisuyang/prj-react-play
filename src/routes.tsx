@@ -1,6 +1,6 @@
 import { useRoutes } from "react-router-dom";
 import Home from "./pages/Home";
-import MainLayout from "./components/MainLayout";
+import MainLayout from "./layouts/MainLayout";
 
 export default function Router() {
   return useRoutes([
