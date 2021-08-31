@@ -2,6 +2,7 @@ import { useState } from "react";
 import { styled } from "@material-ui/core/styles";
 import { auto } from "@popperjs/core";
 import { Outlet } from "react-router";
+import Sidebar from "./Sidebar";
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -29,6 +30,7 @@ export default function MainLayout() {
   const [open, setOpen] = useState(false);
   return (
     <RootStyle>
+      <Sidebar isOpenSidebar={open} onCloseSidebar={() => setOpen(false)} />
       <MainStyle>
         <Outlet />
       </MainStyle>

@@ -13,12 +13,33 @@ const RootStyle = styled("div")({
   overflow: "hidden",
 });
 
-export default function Scrollbar({ children, sx, ...other }: { children: any; sx: string }) {
+const SimpleBarStyle = styled(SimpleBarReact)(({ theme }) => ({
+  maxHeight: "100%",
+  "& .simplebar-scrollbar": {
+    "&:before": {
+      backgroundColor: alpha(theme.palette.grey[600], 0.48),
+    },
+    "&.simplebar-visible:before": {
+      opacity: 1,
+    },
+  },
+  "& .simplebar-track.simplebar-vertical": {
+    width: 10,
+  },
+  "& .simplebar-track.simplebar-horizontal .simplebar-scrollbar": {
+    height: 6,
+  },
+  "& .simplebar-mask": {
+    zIndex: "inherit",
+  },
+}));
+
+export default function Scrollbar({ children, sx, ...other }: { children: any; sx: object }) {
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
   if (isMobile) {
     return (
-      <Box sx={{ overflowX: "auto", ...sx }} {...other}>
+      <Box sx={{ overflowX: "auto" }} {...other}>
         {children}
       </Box>
     );
@@ -26,9 +47,9 @@ export default function Scrollbar({ children, sx, ...other }: { children: any; s
 
   return (
     <RootStyle>
-      <SimpleBarReact timeout={500} clickOnTrack={false} sx={sx} {...other}>
+      <SimpleBarStyle timeout={500} clickOnTrack={false} sx={sx} {...other}>
         {children}
-      </SimpleBarReact>
+      </SimpleBarStyle>
     </RootStyle>
   );
 }

@@ -4,6 +4,9 @@ import { Link as RouterLink, useLocation } from "react-router-dom";
 import { styled } from "@material-ui/core/styles";
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from "@material-ui/core";
 import { MHidden } from "../../components/@meterial-extend";
+import Scrollbar from "../../components/Scrollbar";
+import Logo from "../../components/Logo";
+import account from "../../_mocks_/account";
 
 const DRAWER_WIDTH = 280;
 
@@ -14,21 +17,73 @@ const RootStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-export default function Sidebar({
-  isOpenSidebar,
-  onCloseSidebar,
-}: {
-  isOpenSidebar: boolean;
-  onCloseSidebar: boolean;
-}) {
+const AccountStyle = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  padding: theme.spacing(2, 2.5),
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.grey[200],
+}));
+
+export default function Sidebar({ isOpenSidebar, onCloseSidebar }: { isOpenSidebar: boolean; onCloseSidebar: any }) {
   const { pathname } = useLocation();
 
-  const renderContent = {};
+  useEffect(() => {
+    if (isOpenSidebar) {
+      onCloseSidebar();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
+  const renderContent = (
+    <Scrollbar
+      sx={{
+        height: "100%",
+        "& .simplebar-content": { height: "100%", display: "flex", flexDirection: "column" },
+      }}
+    >
+      <Box sx={{ px: 2.5, py: 3 }}>
+        <Box component={RouterLink} to="/home" sx={{ display: "inline-flex" }}>
+          <Logo />
+        </Box>
+      </Box>
+
+      <Box sx={{ mb: 5, mx: 2.5 }}>
+        <Link underline="none" component={RouterLink} to="#">
+          <AccountStyle>
+            <Avatar src={account.photoURL} alt="photoURL" />
+            <Box sx={{ ml: 2 }}>
+              <Typography variant="subtitle2" sx={{ color: "text.primary" }}>
+                {account.displayName}
+              </Typography>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {account.email}
+              </Typography>
+            </Box>
+          </AccountStyle>
+        </Link>
+      </Box>
+    </Scrollbar>
+  );
 
   return (
     <RootStyle>
       <MHidden width="lgUp">
         <Drawer open={isOpenSidebar} onClose={onCloseSidebar} PaperProps={{ sx: { width: DRAWER_WIDTH } }}>
+          {renderContent}
+        </Drawer>
+      </MHidden>
+      <MHidden width="lgDown">
+        <Drawer
+          open
+          variant="persistent"
+          PaperProps={{
+            sx: {
+              width: DRAWER_WIDTH,
+              bgcolor: "background.default",
+            },
+          }}
+        >
           {renderContent}
         </Drawer>
       </MHidden>
